@@ -316,15 +316,16 @@ function getKepsekUsers(array $req): void
     requireSuperAdmin($req);
 
     $pdo = dbConnectPdo();
+    // Login & kelola user memakai tabel cyber_key
     $stmt = $pdo->query("
         SELECT
-            idincrement,
-            username,
-            nama,
-            CODE01 AS code01,
-            kelompok
-        FROM kepsek_user
-        ORDER BY idincrement ASC
+            urut AS idincrement,
+            users AS username,
+            ket AS nama,
+            fid AS code01,
+            kel AS kelompok
+        FROM cyber_key
+        ORDER BY urut ASC
     ");
     $rows = $stmt->fetchAll();
 
@@ -359,7 +360,7 @@ function createKepsekUser(array $req): void
 
     $pdo = dbConnectPdo();
 
-    $check = $pdo->prepare("SELECT idincrement FROM kepsek_user WHERE username = :username LIMIT 1");
+    $check = $pdo->prepare("SELECT urut FROM cyber_key WHERE users = :username LIMIT 1");
     $check->bindValue(":username", $username, PDO::PARAM_STR);
     $check->execute();
     if ($check->fetch()) {
@@ -368,26 +369,19 @@ function createKepsekUser(array $req): void
         exit;
     }
 
-    $code01 = $code01Raw !== "" ? $code01Raw : null;
-    $kelompok = $kelompokRaw !== "" ? $kelompokRaw : null;
+    $fid = $code01Raw !== "" ? $code01Raw : "";
+    $kel = $kelompokRaw !== "" ? $kelompokRaw : "";
 
     $stmt = $pdo->prepare("
-        INSERT INTO kepsek_user (username, password, nama, CODE01, kelompok)
-        VALUES (:username, :password, :nama, :code01, :kelompok)
+        INSERT INTO cyber_key (users, kunci, fid, ket, kel, password)
+        VALUES (:users, :kunci, :fid, :ket, :kel, :password)
     ");
-    $stmt->bindValue(":username", $username, PDO::PARAM_STR);
+    $stmt->bindValue(":users", $username, PDO::PARAM_STR);
+    $stmt->bindValue(":kunci", "", PDO::PARAM_STR);
+    $stmt->bindValue(":fid", $fid, PDO::PARAM_STR);
+    $stmt->bindValue(":ket", $nama, PDO::PARAM_STR);
+    $stmt->bindValue(":kel", $kel, PDO::PARAM_STR);
     $stmt->bindValue(":password", hashKepsekPassword($password), PDO::PARAM_STR);
-    $stmt->bindValue(":nama", $nama, PDO::PARAM_STR);
-    if ($code01 === null) {
-        $stmt->bindValue(":code01", null, PDO::PARAM_NULL);
-    } else {
-        $stmt->bindValue(":code01", $code01, PDO::PARAM_STR);
-    }
-    if ($kelompok === null) {
-        $stmt->bindValue(":kelompok", null, PDO::PARAM_NULL);
-    } else {
-        $stmt->bindValue(":kelompok", $kelompok, PDO::PARAM_STR);
-    }
     $stmt->execute();
 
     $id = (int) $pdo->lastInsertId();
@@ -400,8 +394,8 @@ function createKepsekUser(array $req): void
             "idincrement" => $id,
             "username"    => $username,
             "nama"        => $nama,
-            "code01"      => $code01,
-            "kelompok"    => $kelompok,
+            "code01"      => $fid !== "" ? $fid : null,
+            "kelompok"    => $kel !== "" ? $kel : null,
         ],
     ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     exit;
@@ -431,7 +425,7 @@ function updateKepsekUser(array $req): void
 
     $pdo = dbConnectPdo();
 
-    $exist = $pdo->prepare("SELECT idincrement FROM kepsek_user WHERE idincrement = :id LIMIT 1");
+    $exist = $pdo->prepare("SELECT urut FROM cyber_key WHERE urut = :id LIMIT 1");
     $exist->bindValue(":id", $id, PDO::PARAM_INT);
     $exist->execute();
     if (!$exist->fetch()) {
@@ -440,7 +434,7 @@ function updateKepsekUser(array $req): void
         exit;
     }
 
-    $check = $pdo->prepare("SELECT idincrement FROM kepsek_user WHERE username = :username AND idincrement <> :id LIMIT 1");
+    $check = $pdo->prepare("SELECT urut FROM cyber_key WHERE users = :username AND urut <> :id LIMIT 1");
     $check->bindValue(":username", $username, PDO::PARAM_STR);
     $check->bindValue(":id", $id, PDO::PARAM_INT);
     $check->execute();
@@ -450,35 +444,27 @@ function updateKepsekUser(array $req): void
         exit;
     }
 
-    $code01 = $code01Raw !== "" ? $code01Raw : null;
-    $kelompok = $kelompokRaw !== "" ? $kelompokRaw : null;
+    $fid = $code01Raw !== "" ? $code01Raw : "";
+    $kel = $kelompokRaw !== "" ? $kelompokRaw : "";
 
     if ($password !== "") {
         $stmt = $pdo->prepare("
-            UPDATE kepsek_user
-            SET username = :username, password = :password, nama = :nama, CODE01 = :code01, kelompok = :kelompok
-            WHERE idincrement = :id
+            UPDATE cyber_key
+            SET users = :users, password = :password, ket = :ket, fid = :fid, kel = :kel
+            WHERE urut = :id
         ");
         $stmt->bindValue(":password", hashKepsekPassword($password), PDO::PARAM_STR);
     } else {
         $stmt = $pdo->prepare("
-            UPDATE kepsek_user
-            SET username = :username, nama = :nama, CODE01 = :code01, kelompok = :kelompok
-            WHERE idincrement = :id
+            UPDATE cyber_key
+            SET users = :users, ket = :ket, fid = :fid, kel = :kel
+            WHERE urut = :id
         ");
     }
-    $stmt->bindValue(":username", $username, PDO::PARAM_STR);
-    $stmt->bindValue(":nama", $nama, PDO::PARAM_STR);
-    if ($code01 === null) {
-        $stmt->bindValue(":code01", null, PDO::PARAM_NULL);
-    } else {
-        $stmt->bindValue(":code01", $code01, PDO::PARAM_STR);
-    }
-    if ($kelompok === null) {
-        $stmt->bindValue(":kelompok", null, PDO::PARAM_NULL);
-    } else {
-        $stmt->bindValue(":kelompok", $kelompok, PDO::PARAM_STR);
-    }
+    $stmt->bindValue(":users", $username, PDO::PARAM_STR);
+    $stmt->bindValue(":ket", $nama, PDO::PARAM_STR);
+    $stmt->bindValue(":fid", $fid, PDO::PARAM_STR);
+    $stmt->bindValue(":kel", $kel, PDO::PARAM_STR);
     $stmt->bindValue(":id", $id, PDO::PARAM_INT);
     $stmt->execute();
 
@@ -490,8 +476,8 @@ function updateKepsekUser(array $req): void
             "idincrement" => $id,
             "username"    => $username,
             "nama"        => $nama,
-            "code01"      => $code01,
-            "kelompok"    => $kelompok,
+            "code01"      => $fid !== "" ? $fid : null,
+            "kelompok"    => $kel !== "" ? $kel : null,
         ],
     ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     exit;
@@ -516,7 +502,7 @@ function deleteKepsekUser(array $req): void
 
     $pdo = dbConnectPdo();
 
-    $exist = $pdo->prepare("SELECT idincrement, username FROM kepsek_user WHERE idincrement = :id LIMIT 1");
+    $exist = $pdo->prepare("SELECT urut, users FROM cyber_key WHERE urut = :id LIMIT 1");
     $exist->bindValue(":id", $id, PDO::PARAM_INT);
     $exist->execute();
     $row = $exist->fetch();
@@ -527,13 +513,13 @@ function deleteKepsekUser(array $req): void
     }
 
     $selfUsername = trim((string) ($req["username"] ?? ""));
-    if ($selfUsername !== "" && strcasecmp($selfUsername, (string) $row["username"]) === 0) {
+    if ($selfUsername !== "" && strcasecmp($selfUsername, (string) $row["users"]) === 0) {
         http_response_code(422);
         echo json_encode(["status" => 422, "message" => "Tidak dapat menghapus akun sendiri"], JSON_UNESCAPED_UNICODE);
         exit;
     }
 
-    $stmt = $pdo->prepare("DELETE FROM kepsek_user WHERE idincrement = :id");
+    $stmt = $pdo->prepare("DELETE FROM cyber_key WHERE urut = :id");
     $stmt->bindValue(":id", $id, PDO::PARAM_INT);
     $stmt->execute();
 
@@ -646,18 +632,8 @@ function buildFilterSql(array $req, ?string $code01, array &$params): string
         $params[":search_nis"] = $like;
     }
 
-    $beasiswaCodes = normalizeBeasiswaCodes(
-        $req["is_anak_pegawai"] ?? $req["beasiswa"] ?? $req["kader"] ?? []
-    );
-    if (!empty($beasiswaCodes)) {
-        $ph = [];
-        foreach ($beasiswaCodes as $i => $code) {
-            $key = ":beasiswa_$i";
-            $ph[] = $key;
-            $params[$key] = $code;
-        }
-        $sql .= " AND COALESCE(c.is_anak_pegawai, 0) IN (" . implode(",", $ph) . ") ";
-    }
+    // scctcust.is_anak_pegawai tidak ada di DB Surabaya Al-Irsyad → filter beasiswa di-skip
+    // (tetap terima param agar FE lama tidak error)
 
     $tagihan = resolveTagihanFilter($req);
     if (!empty($tagihan)) {
@@ -843,7 +819,7 @@ function getSiswaPeriode(array $req, ?string $code01): void
             mk.kelas AS jenjang,
             c.NO_WA AS no_wa,
             c.CODE01 AS code01,
-            COALESCE(c.is_anak_pegawai, 0) AS is_anak_pegawai,
+            0 AS is_anak_pegawai,
             COALESCE(SUM(
                 CASE 
                     WHEN b.FSTSBolehBayar = 1 
@@ -898,7 +874,7 @@ function getSiswaPeriode(array $req, ?string $code01): void
         $saldoJoin
     ";
 
-    $sqlGroupBy = " GROUP BY c.CUSTID, c.NOCUST, c.NMCUST, c.DESC02, mk.unit, mk.kelas, c.NO_WA, c.CODE01, c.is_anak_pegawai, sal.saldo ";
+    $sqlGroupBy = " GROUP BY c.CUSTID, c.NOCUST, c.NMCUST, c.DESC02, mk.unit, mk.kelas, c.NO_WA, c.CODE01, sal.saldo ";
 
     if (!$hasPaidst) {
         $sqlInner = $sqlSelect . $sqlFrom . $custWhere . $sqlGroupBy . $orderLimit;
@@ -1023,6 +999,10 @@ function getSiswaTagihanPeriode(array $req, ?string $code01): void
     foreach ($rows as &$row) {
         $row["jumlah"] = (float) $row["jumlah"];
         $row["status_bayar"] = (int) $row["status_bayar"];
+        $tglBayar = trim((string) ($row["tanggal_bayar"] ?? ""));
+        if ($row["status_bayar"] !== 1 || $tglBayar === "" || str_starts_with($tglBayar, "0000-00-00")) {
+            $row["tanggal_bayar"] = "";
+        }
     }
 
     http_response_code(200);
@@ -1785,7 +1765,7 @@ function getTagihanInvoice(array $req, ?string $code01): void
             c.NMCUST AS nama,
             c.DESC02 AS kelas,
             COALESCE(mk.unit, c.CODE01, '') AS sekolah,
-            COALESCE(c.is_anak_pegawai, 0) AS is_anak_pegawai
+            0 AS is_anak_pegawai
         FROM scctbill b
         INNER JOIN scctcust c ON c.CUSTID = b.CUSTID
         LEFT JOIN mst_kelas mk ON mk.id = c.CODE03
@@ -2483,9 +2463,9 @@ function saveRiwayatPenagihan(array $req, ?string $code01): void
     $pdo = dbConnectPdo();
     $stmt = $pdo->prepare("
         INSERT INTO tbl_riwayatpenagihan
-            (custid, nocust, admin, tanggal_komunikasi, media_komunikasi, hasil_komunikasi, rencana_pembayaran, catatan, created_at)
+            (custid, nocust, admin, tanggal_komunikasi, media_komunikasi, hasil_komunikasi, rencana_pembayaran, catatan)
         VALUES
-            (:custid, :nocust, :admin, :tanggal_komunikasi, :media_komunikasi, :hasil_komunikasi, :rencana_pembayaran, :catatan, NOW())
+            (:custid, :nocust, :admin, :tanggal_komunikasi, :media_komunikasi, :hasil_komunikasi, :rencana_pembayaran, :catatan)
     ");
     $stmt->bindValue(":custid", (int) $custid, PDO::PARAM_INT);
     $stmt->bindValue(":nocust", $nocust, PDO::PARAM_STR);
@@ -2602,9 +2582,9 @@ function importRiwayatPenagihan(array $req): void
     ");
     $insertStmt = $pdo->prepare("
         INSERT INTO tbl_riwayatpenagihan
-            (custid, nocust, admin, tanggal_komunikasi, media_komunikasi, hasil_komunikasi, rencana_pembayaran, catatan, created_at)
+            (custid, nocust, admin, tanggal_komunikasi, media_komunikasi, hasil_komunikasi, rencana_pembayaran, catatan)
         VALUES
-            (:custid, :nocust, :admin, :tanggal_komunikasi, :media_komunikasi, :hasil_komunikasi, :rencana_pembayaran, :catatan, NOW())
+            (:custid, :nocust, :admin, :tanggal_komunikasi, :media_komunikasi, :hasil_komunikasi, :rencana_pembayaran, :catatan)
     ");
 
     $success = 0;
@@ -2719,8 +2699,7 @@ function getRiwayatPenagihan(array $req, ?string $code01): void
             media_komunikasi,
             hasil_komunikasi,
             rencana_pembayaran,
-            catatan,
-            created_at
+            catatan
         FROM tbl_riwayatpenagihan
         WHERE custid = :custid
         ORDER BY tanggal_komunikasi DESC, idincrement DESC
@@ -2789,6 +2768,7 @@ function listRiwayatPenagihan(array $req): void
         $offset = ($page - 1) * $perPage;
     }
 
+    // tanpa created_at (kolom tidak ada di DB Al-Irsyad)
     $sql = "
         SELECT
             r.idincrement AS id,
@@ -2800,8 +2780,7 @@ function listRiwayatPenagihan(array $req): void
             r.media_komunikasi,
             r.hasil_komunikasi,
             r.rencana_pembayaran,
-            r.catatan,
-            r.created_at
+            r.catatan
         FROM tbl_riwayatpenagihan r
         LEFT JOIN scctcust c ON c.CUSTID = r.custid
         $where

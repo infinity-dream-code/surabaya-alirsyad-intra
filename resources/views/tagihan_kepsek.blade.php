@@ -538,9 +538,11 @@
         }
         const rows = bills.map(b => {
             const paid = Number(b.status_bayar) === 1;
-            const tglBayar = paid && b.tanggal_bayar
-                ? escapeHtml(b.tanggal_bayar)
-                : '<span style="color:#94a3b8;">—</span>';
+            const tglRaw = String(b.tanggal_bayar ?? '').trim();
+            const tglOk = paid && tglRaw && tglRaw !== '-' && !tglRaw.startsWith('0000-00-00') && !tglRaw.includes('\uFFFD');
+            const tglBayar = tglOk
+                ? escapeHtml(tglRaw)
+                : '<span style="color:#94a3b8;">-</span>';
             return `
                 <tr class="bill-row" data-custid="${escapeHtml(custid)}" data-kode="${escapeHtml(b.kode_tagihan)}">
                     <td>${escapeHtml(b.bta || '-')}</td>
@@ -652,7 +654,7 @@
         const headHtml = `
             <div class="siswa-panel-head">
                 <div class="siswa-panel-title-row">
-                    <div class="t">Detail Keuangan — ${escapeHtml(siswa.nama)}</div>
+                    <div class="t">Detail Keuangan - ${escapeHtml(siswa.nama)}</div>
                 </div>
                 <div class="mini-total">
                     <div class="info-box">
@@ -1016,7 +1018,7 @@
 
             const pagination = json.pagination;
             hasMore = !!pagination.has_more;
-            document.getElementById('paginationInfo').textContent = `Menampilkan ${pagination.from}–${pagination.to}`;
+            document.getElementById('paginationInfo').textContent = `Menampilkan ${pagination.from}-${pagination.to}`;
             document.getElementById('btnPageNum').textContent = pagination.page;
             document.getElementById('btnPrev').disabled = pagination.page <= 1;
             document.getElementById('btnNext').disabled = !hasMore;

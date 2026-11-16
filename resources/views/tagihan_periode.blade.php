@@ -459,7 +459,7 @@
             .table-toolbar .btn-row { justify-content: stretch; }
             .table-toolbar .btn { flex: 1; justify-content: center; }
         }
-        /* Card list: HP + tablet portrait — harus SETELAH rule .mobile-list { display:none } */
+        /* Card list: HP + tablet portrait - harus SETELAH rule .mobile-list { display:none } */
         .mobile-list {
             display: none;
             flex-direction: column;
@@ -1196,7 +1196,7 @@ async function openLaporanPenagihanModal(siswa) {
         siswa.kelas ? `Kelas ${siswa.kelas}` : '',
         custid ? `CUSTID ${custid}` : '',
         bta ? `BTA ${bta}` : '',
-    ].filter(Boolean).join(' · ') || '-';
+    ].filter(Boolean).join(' - ') || '-';
 
     const body = document.getElementById('laporanBody');
     body.innerHTML = '<div class="mini-loading"><div class="spinner"></div>Memuat riwayat...</div>';
@@ -1324,7 +1324,7 @@ function renderActionButtons(siswa, paid) {
 function renderActionCells(siswa, paid) {
     if (paid) {
         return `
-            <td class="col-wa"><span class="aksi-empty">—</span></td>
+            <td class="col-wa"><span class="aksi-empty">-</span></td>
             <td class="col-penagihan">${renderActionButtons(siswa, paid)}</td>
         `;
     }
@@ -1374,7 +1374,7 @@ function renderMobileCard(row, no) {
                 <div>
                     <div class="m-card-no">#${no}</div>
                     <div class="m-card-name">${escapeHtml((row.nama || '').toUpperCase())}</div>
-                    <div class="m-card-meta">${escapeHtml(row.kelas || '-')} · ${escapeHtml(row.sekolah || '-')}</div>
+                    <div class="m-card-meta">${escapeHtml(row.kelas || '-')} - ${escapeHtml(row.sekolah || '-')}</div>
                 </div>
             </div>
             <div class="m-card-badges">
@@ -1568,9 +1568,11 @@ function renderBillsTable(custid, bills) {
     }
     const rows = bills.map(b => {
         const paid = Number(b.status_bayar) === 1;
-        const tglBayar = paid && b.tanggal_bayar
-            ? escapeHtml(b.tanggal_bayar)
-            : '<span style="color:#94a3b8;">—</span>';
+        const tglRaw = String(b.tanggal_bayar ?? '').trim();
+        const tglOk = paid && tglRaw && tglRaw !== '-' && !tglRaw.startsWith('0000-00-00') && !tglRaw.includes('\uFFFD');
+        const tglBayar = tglOk
+            ? escapeHtml(tglRaw)
+            : '<span style="color:#94a3b8;">-</span>';
         const namaTagihan = escapeHtml(b.nama_tagihan);
         const namaCell = paid
             ? `<a class="invoice-link" href="${escapeHtml(buildInvoiceUrl(custid, b.kode_tagihan))}" target="_blank" rel="noopener" title="Download invoice"><i class="fas fa-file-pdf"></i>${namaTagihan}</a>`
@@ -1824,7 +1826,7 @@ async function toggleSiswaDetail(btn, dataRow, siswa) {
     const headHtml = (saldoValueHtml) => `
         <div class="siswa-panel-head">
             <div class="siswa-panel-title-row">
-                <div class="t">Detail Keuangan — ${escapeHtml((siswa.nama || '').toUpperCase())} ${kaderBadgeHtml(siswa)}</div>
+                <div class="t">Detail Keuangan - ${escapeHtml((siswa.nama || '').toUpperCase())} ${kaderBadgeHtml(siswa)}</div>
                 <div class="siswa-panel-actions">
                     ${periodeBadgeHtml}
                     ${laporanBtnHtml}
@@ -2439,7 +2441,7 @@ async function loadSiswaList(resetPage = false) {
 
         const pagination = json.pagination;
         hasMore = !!pagination.has_more;
-        document.getElementById('paginationInfo').textContent = `Menampilkan ${pagination.from}–${pagination.to}`;
+        document.getElementById('paginationInfo').textContent = `Menampilkan ${pagination.from}-${pagination.to}`;
         document.getElementById('btnPageNum').textContent = pagination.page;
         document.getElementById('btnPrev').disabled = pagination.page <= 1;
         document.getElementById('btnNext').disabled = !hasMore;

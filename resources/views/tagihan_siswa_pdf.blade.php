@@ -173,7 +173,7 @@
                     <td>
                         <span class="badge {{ $paid ? 'ok' : 'no' }}">{{ $paid ? 'Lunas' : 'Belum Lunas' }}</span>
                     </td>
-                    <td>{{ $paid ? ($b['tanggal_bayar'] ?? '—') : '—' }}</td>
+                    <td>{{ $paid ? (($b['tanggal_bayar'] ?? '') !== '' ? $b['tanggal_bayar'] : '-') : '-' }}</td>
                 </tr>
             @empty
                 <tr><td colspan="5" class="muted">Tidak ada data tagihan</td></tr>

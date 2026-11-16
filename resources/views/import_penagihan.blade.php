@@ -521,7 +521,7 @@ async function loadList() {
         const from = state.total === 0 ? 0 : ((state.page - 1) * state.perPage) + 1;
         const to = Math.min(state.page * state.perPage, state.total);
         document.getElementById('listMeta').textContent = state.total
-            ? `Menampilkan ${from}–${to} dari ${state.total} data`
+            ? `Menampilkan ${from}-${to} dari ${state.total} data`
             : 'Belum ada data';
 
         if (!rows.length) {

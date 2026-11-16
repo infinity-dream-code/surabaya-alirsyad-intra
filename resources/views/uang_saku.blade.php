@@ -408,7 +408,7 @@ function getSelectedSekolah() {
 function updatePeriodLabel() {
     const dari = document.getElementById('filterTglDari').value;
     const sampai = document.getElementById('filterTglSampai').value;
-    document.getElementById('summaryPeriod').textContent = 'Periode laporan: ' + (formatTgl(dari) || 'Awal') + ' – ' + (formatTgl(sampai) || 'Sekarang');
+    document.getElementById('summaryPeriod').textContent = 'Periode laporan: ' + (formatTgl(dari) || 'Awal') + ' - ' + (formatTgl(sampai) || 'Sekarang');
 }
 
 /* ---------- Dropdown multi (sekolah & kelas) ---------- */
@@ -560,7 +560,7 @@ function updatePaginationInfo() {
     const start = lastRowCount ? (currentPage - 1) * pageSize + 1 : 0;
     const end = (currentPage - 1) * pageSize + lastRowCount;
     const dari = summaryTotal === null ? '' : ` dari ${summaryTotal.toLocaleString('id-ID')} siswa`;
-    document.getElementById('paginationInfo').textContent = `Menampilkan ${start}–${end}${dari}`;
+    document.getElementById('paginationInfo').textContent = `Menampilkan ${start}-${end}${dari}`;
 }
 
 async function loadSummary() {
@@ -645,7 +645,7 @@ function renderRows(rows) {
             <div class="m-card-top">
                 <div>
                     <div class="m-card-name">${escapeHtml(String(r.nama || '-').toUpperCase())}</div>
-                    <div class="m-card-meta">${escapeHtml(r.kelas || '-')} · ${escapeHtml(r.sekolah || '-')}</div>
+                    <div class="m-card-meta">${escapeHtml(r.kelas || '-')} - ${escapeHtml(r.sekolah || '-')}</div>
                     <div class="m-card-meta">VA ${escapeHtml(r.va || '-')}</div>
                 </div>
                 <span class="m-card-no">#${startNo + i}</span>

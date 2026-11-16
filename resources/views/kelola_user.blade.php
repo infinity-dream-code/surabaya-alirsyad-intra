@@ -116,7 +116,7 @@
         </header>
 
         <div class="toolbar">
-            <p>CRUD akun <code>kepsek_user</code> — hanya superadmin</p>
+            <p>CRUD akun <code>cyber_key</code> - hanya superadmin</p>
             <button type="button" class="btn btn-primary" id="btnAdd"><i class="fas fa-plus"></i> Tambah User</button>
         </div>
 
@@ -128,8 +128,8 @@
                             <th>ID</th>
                             <th>Username</th>
                             <th>Nama</th>
-                            <th>CODE01</th>
-                            <th>Kelompok</th>
+                            <th>FID / Unit</th>
+                            <th>Kel (kelompok)</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -198,19 +198,21 @@
                     <input type="text" id="formNama" name="nama" required maxlength="150">
                 </div>
                 <div class="field">
-                    <label for="formCode01">CODE01 (unit = mst_kelas.unit)</label>
+                    <label for="formCode01">FID / Unit (opsional)</label>
                     <input type="text" id="formCode01" name="code01" maxlength="255" placeholder="kosong = semua unit">
-                    <div class="hint">Harus sama persis dengan kolom <b>unit</b> di mst_kelas. Contoh: SMP PUTRI 1, SMA TAHFIDZH. Multi unit: pisah koma.</div>
+                    <div class="hint">Isi jika user dibatasi unit tertentu (sama dengan mst_kelas.unit). Multi unit: pisah koma.</div>
                 </div>
                 <div class="field">
-                    <label for="formKelompok">Kelompok</label>
+                    <label for="formKelompok">Kel (kelompok)</label>
                     <select id="formKelompok" name="kelompok">
-                        <option value="">(kosong / admin biasa)</option>
-                        <option value="0">0 (admin biasa)</option>
-                        <option value="superadmin">superadmin</option>
-                        <option value="kepsek">kepsek (seperti superadmin, tanpa Laporan Uang Saku)</option>
+                        <option value="">(kosong)</option>
+                        <option value="admfak">admfak (Admin Keuangan / superadmin)</option>
+                        <option value="supersaku">supersaku (superadmin)</option>
+                        <option value="usaku">usaku (Admin Uang Saku)</option>
+                        <option value="ceksaku">ceksaku</option>
+                        <option value="kantin">kantin</option>
+                        <option value="cashless">cashless</option>
                         <option value="humas">humas</option>
-                        <option value="1">1 (humas)</option>
                     </select>
                     <div class="hint">Atau ketik nilai lain di bawah jika perlu</div>
                 </div>
@@ -270,8 +272,11 @@ function escapeHtml(str) {
 
 function kelompokBadge(val) {
     const v = String(val ?? '').trim();
-    if (!v) return '<span class="muted">—</span>';
-    const cls = ['superadmin', 'kepsek'].includes(v.toLowerCase()) ? 'superadmin' : (v.toLowerCase() === 'humas' || v === '1' ? 'humas' : '');
+    if (!v) return '<span class="muted">-</span>';
+    const low = v.toLowerCase();
+    const cls = ['superadmin', 'kepsek', 'admfak', 'supersaku'].includes(low)
+        ? 'superadmin'
+        : (low === 'humas' || v === '1' ? 'humas' : '');
     return `<span class="badge ${cls}">${escapeHtml(v)}</span>`;
 }
 
@@ -293,7 +298,7 @@ function renderUsers(rows) {
             <td>${escapeHtml(id)}</td>
             <td>${escapeHtml(u.username)}</td>
             <td>${escapeHtml(u.nama)}</td>
-            <td>${u.code01 ? escapeHtml(u.code01) : '<span class="muted">—</span>'}</td>
+            <td>${u.code01 ? escapeHtml(u.code01) : '<span class="muted">-</span>'}</td>
             <td>${kelompokBadge(u.kelompok)}</td>
             <td class="actions">
                 <button type="button" class="btn btn-secondary btn-sm" data-edit="${id}"><i class="fas fa-pen"></i> Edit</button>
@@ -308,8 +313,8 @@ function renderUsers(rows) {
         return `<div class="user-card">
             <div class="row"><span class="label">Username</span><strong>${escapeHtml(u.username)}</strong></div>
             <div class="row"><span class="label">Nama</span><span>${escapeHtml(u.nama)}</span></div>
-            <div class="row"><span class="label">CODE01</span><span>${u.code01 ? escapeHtml(u.code01) : '—'}</span></div>
-            <div class="row"><span class="label">Kelompok</span>${kelompokBadge(u.kelompok)}</div>
+            <div class="row"><span class="label">FID / Unit</span><span>${u.code01 ? escapeHtml(u.code01) : '-'}</span></div>
+            <div class="row"><span class="label">Kel</span>${kelompokBadge(u.kelompok)}</div>
             <div class="actions" style="margin-top:10px">
                 <button type="button" class="btn btn-secondary btn-sm" data-edit="${id}"><i class="fas fa-pen"></i> Edit</button>
                 ${isSelf ? '' : `<button type="button" class="btn btn-danger btn-sm" data-del="${id}"><i class="fas fa-trash"></i></button>`}
