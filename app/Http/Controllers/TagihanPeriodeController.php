@@ -14,7 +14,7 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class TagihanPeriodeController extends Controller
 {
-    private const API_URL = 'http://10.99.23.111/ws_client/Malang_Arrohmah_Putri_Kepsek_Monitoring/index.php';
+    private const API_URL = 'http://10.99.23.111/ws_client/Surabaya_Alirsyad/index.php';
     private const LAPORAN_SANTRI_DIR = 'laporan-santri';
     private const TAGIHAN_DAFTAR_ULANG = 'BIAYA Daftar Ulang Ajaran Baru';
 

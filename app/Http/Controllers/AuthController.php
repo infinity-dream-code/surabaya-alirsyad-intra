@@ -10,7 +10,7 @@ class AuthController extends Controller
 {
     private const API_BASE_URL_PERIZINAN = 'http://vps1.smartpayment.co.id:8888/Data/Malang_Arrohmah_Putri_Perizinan/WebAPI.php';
     private const API_BASE_URL_PRESENSI_SHOLAT = 'http://vps1.smartpayment.co.id:8888/Data/Malang_Arrohmah_Putri_PresensiSholat/WebAPI.php';
-    private const API_BASE_URL_MONITORING_KEPSEK = 'http://10.99.23.111/ws_client/Malang_Arrohmah_Putri_Kepsek_Monitoring/index.php';
+    private const API_BASE_URL_MONITORING_KEPSEK = 'http://10.99.23.111/ws_client/Surabaya_Alirsyad/index.php';
     private const JWT_SECRET = 'a7c2a8a9b3c4a5a6a7a8a9b0c1a2a3';
 
     public function showLogin()

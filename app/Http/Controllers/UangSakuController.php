@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Log;
 
 class UangSakuController extends Controller
 {
-    private const API_URL = 'http://10.99.23.111/ws_client/Malang_Arrohmah_Putri_Kepsek_Monitoring/index.php';
+    private const API_URL = 'http://10.99.23.111/ws_client/Surabaya_Alirsyad/index.php';
 
     /** Prefix VA uang saku per CODE01 siswa (VA SPP memakai 751xxx) */
     private const VA_UANG_SAKU_PREFIX = '752027';
