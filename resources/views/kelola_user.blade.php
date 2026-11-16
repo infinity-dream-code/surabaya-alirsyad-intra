@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kelola User - Monitoring Kepsek</title>
+    <title>Kelola User - Aplikasi Keuangan</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -116,7 +116,7 @@
         </header>
 
         <div class="toolbar">
-            <p>CRUD akun <code>kepsek_user</code> â€” hanya superadmin</p>
+            <p>CRUD akun <code>kepsek_user</code> — hanya superadmin</p>
             <button type="button" class="btn btn-primary" id="btnAdd"><i class="fas fa-plus"></i> Tambah User</button>
         </div>
 
@@ -147,7 +147,7 @@
 <aside class="drawer" id="drawer" aria-hidden="true">
     <div class="drawer-header">
         <div class="drawer-header-main">
-            <div class="drawer-logo"><img src="{{ asset('logo.png') }}" alt="Logo"></div>
+            <div class="drawer-logo"><img src="{{ asset('alirsyad.jpg') }}" alt="Logo"></div>
             <div>
                 <div class="drawer-user-name">{{ session('user.nama', session('user.username')) }}</div>
                 <div class="drawer-user-role">{{ strtolower(trim((string) session('user.kelompok', ''))) === 'kepsek' ? 'Kepsek' : 'Superadmin' }}</div>
@@ -270,7 +270,7 @@ function escapeHtml(str) {
 
 function kelompokBadge(val) {
     const v = String(val ?? '').trim();
-    if (!v) return '<span class="muted">â€”</span>';
+    if (!v) return '<span class="muted">—</span>';
     const cls = ['superadmin', 'kepsek'].includes(v.toLowerCase()) ? 'superadmin' : (v.toLowerCase() === 'humas' || v === '1' ? 'humas' : '');
     return `<span class="badge ${cls}">${escapeHtml(v)}</span>`;
 }
@@ -293,7 +293,7 @@ function renderUsers(rows) {
             <td>${escapeHtml(id)}</td>
             <td>${escapeHtml(u.username)}</td>
             <td>${escapeHtml(u.nama)}</td>
-            <td>${u.code01 ? escapeHtml(u.code01) : '<span class="muted">â€”</span>'}</td>
+            <td>${u.code01 ? escapeHtml(u.code01) : '<span class="muted">—</span>'}</td>
             <td>${kelompokBadge(u.kelompok)}</td>
             <td class="actions">
                 <button type="button" class="btn btn-secondary btn-sm" data-edit="${id}"><i class="fas fa-pen"></i> Edit</button>
@@ -308,7 +308,7 @@ function renderUsers(rows) {
         return `<div class="user-card">
             <div class="row"><span class="label">Username</span><strong>${escapeHtml(u.username)}</strong></div>
             <div class="row"><span class="label">Nama</span><span>${escapeHtml(u.nama)}</span></div>
-            <div class="row"><span class="label">CODE01</span><span>${u.code01 ? escapeHtml(u.code01) : 'â€”'}</span></div>
+            <div class="row"><span class="label">CODE01</span><span>${u.code01 ? escapeHtml(u.code01) : '—'}</span></div>
             <div class="row"><span class="label">Kelompok</span>${kelompokBadge(u.kelompok)}</div>
             <div class="actions" style="margin-top:10px">
                 <button type="button" class="btn btn-secondary btn-sm" data-edit="${id}"><i class="fas fa-pen"></i> Edit</button>

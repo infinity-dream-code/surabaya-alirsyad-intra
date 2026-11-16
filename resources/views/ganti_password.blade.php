@@ -281,7 +281,7 @@
 
                     <div class="form-group">
                         <div class="input-wrapper">
-                            <span class="input-icon">🔒</span>
+                            <span class="input-icon">??</span>
                             <input
                                 type="password"
                                 name="old_password"
@@ -293,7 +293,7 @@
 
                     <div class="form-group">
                         <div class="input-wrapper">
-                            <span class="input-icon">🔒</span>
+                            <span class="input-icon">??</span>
                             <input
                                 type="password"
                                 name="new_password"
@@ -306,7 +306,7 @@
 
                     <div class="form-group">
                         <div class="input-wrapper">
-                            <span class="input-icon">🔒</span>
+                            <span class="input-icon">??</span>
                             <input
                                 type="password"
                                 name="confirm_password"
@@ -328,7 +328,7 @@
     <aside class="drawer" id="drawer">
         <div class="drawer-header">
             <div class="drawer-logo">
-                <img src="{{ asset('logo.png') }}" alt="Logo">
+                <img src="{{ asset('alirsyad.jpg') }}" alt="Logo">
             </div>
             <div>
                 <div class="drawer-user-name">{{ session('user.username', 'farrelep') }}</div>

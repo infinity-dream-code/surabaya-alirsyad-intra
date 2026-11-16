@@ -514,7 +514,7 @@ class TagihanPeriodeController extends Controller
     {
         $pdf = Pdf::loadView('tagihan_siswa_pdf', array_merge($data['view'], [
             'logoSrc' => $this->resolvePdfLogoSrc(),
-            'ttdSrc' => $this->resolvePdfImageSrc('ttd.png'),
+            'ttdSrc' => null,
         ]))->setPaper('a4', 'portrait');
 
         return $download ? $pdf->download($data['filename']) : $pdf->stream($data['filename']);
@@ -696,7 +696,7 @@ class TagihanPeriodeController extends Controller
 
     private function resolvePdfLogoSrc(): ?string
     {
-        return $this->resolvePdfImageSrc('logoartri.png');
+        return $this->resolvePdfImageSrc('alirsyad.jpg');
     }
 
     private function resolvePdfImageSrc(string $filename): ?string

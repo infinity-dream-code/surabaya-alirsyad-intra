@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan Uang Saku - Monitoring Kepsek</title>
+    <title>Laporan Uang Saku - Aplikasi Keuangan</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -333,7 +333,7 @@
 <aside class="drawer" id="drawer" aria-hidden="true">
     <div class="drawer-header">
         <div class="drawer-header-main">
-            <div class="drawer-logo"><img src="{{ asset('logo.png') }}" alt="Logo"></div>
+            <div class="drawer-logo"><img src="{{ asset('alirsyad.jpg') }}" alt="Logo"></div>
             <div>
                 <div class="drawer-user-name">{{ session('user.nama', session('user.username')) }}</div>
                 <div class="drawer-user-role">{{ $isSuperadmin ? 'Superadmin' : 'Kepala Sekolah' }}</div>
@@ -408,7 +408,7 @@ function getSelectedSekolah() {
 function updatePeriodLabel() {
     const dari = document.getElementById('filterTglDari').value;
     const sampai = document.getElementById('filterTglSampai').value;
-    document.getElementById('summaryPeriod').textContent = 'Periode laporan: ' + (formatTgl(dari) || 'Awal') + ' â€“ ' + (formatTgl(sampai) || 'Sekarang');
+    document.getElementById('summaryPeriod').textContent = 'Periode laporan: ' + (formatTgl(dari) || 'Awal') + ' – ' + (formatTgl(sampai) || 'Sekarang');
 }
 
 /* ---------- Dropdown multi (sekolah & kelas) ---------- */
@@ -560,7 +560,7 @@ function updatePaginationInfo() {
     const start = lastRowCount ? (currentPage - 1) * pageSize + 1 : 0;
     const end = (currentPage - 1) * pageSize + lastRowCount;
     const dari = summaryTotal === null ? '' : ` dari ${summaryTotal.toLocaleString('id-ID')} siswa`;
-    document.getElementById('paginationInfo').textContent = `Menampilkan ${start}â€“${end}${dari}`;
+    document.getElementById('paginationInfo').textContent = `Menampilkan ${start}–${end}${dari}`;
 }
 
 async function loadSummary() {
@@ -645,7 +645,7 @@ function renderRows(rows) {
             <div class="m-card-top">
                 <div>
                     <div class="m-card-name">${escapeHtml(String(r.nama || '-').toUpperCase())}</div>
-                    <div class="m-card-meta">${escapeHtml(r.kelas || '-')} Â· ${escapeHtml(r.sekolah || '-')}</div>
+                    <div class="m-card-meta">${escapeHtml(r.kelas || '-')} · ${escapeHtml(r.sekolah || '-')}</div>
                     <div class="m-card-meta">VA ${escapeHtml(r.va || '-')}</div>
                 </div>
                 <span class="m-card-no">#${startNo + i}</span>

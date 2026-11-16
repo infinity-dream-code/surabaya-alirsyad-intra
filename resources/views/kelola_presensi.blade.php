@@ -480,7 +480,7 @@
 <body>
 <aside class="sidebar" id="sidebar">
     <div class="sb-brand">
-        <div class="sb-logo"><img src="{{ asset('logo.png') }}" alt="Logo"></div>
+        <div class="sb-logo"><img src="{{ asset('alirsyad.jpg') }}" alt="Logo"></div>
         <div>
             <div class="sb-name">{{ session('user.username', '-') }}</div>
             <div class="sb-role">User</div>

@@ -114,11 +114,11 @@
         <tr>
             <td class="logo-cell">
                 @if(!empty($logoSrc))
-                    <img src="{{ $logoSrc }}" alt="Logo ARTRI">
+                    <img src="{{ $logoSrc }}" alt="Logo Al-Irsyad">
                 @endif
             </td>
             <td class="title-cell">
-                <div class="pdf-org">YPI AR-ROHMAH PUTRI</div>
+                <div class="pdf-org">YAYASAN PERGURUAN AL-IRSYAD</div>
                 <div class="pdf-title">LAPORAN KEUANGAN SANTRI</div>
                 <div class="pdf-meta">
                     dicetak {{ $generatedAt }}@if(!empty($admin)) · oleh {{ $admin }}@endif
@@ -210,18 +210,14 @@
     <table class="sign-wrap">
         <tr>
             <td class="sign-left">
-                Dokumen ini dihasilkan otomatis dari aplikasi Monitoring Kepsek.
+                Dokumen ini dihasilkan otomatis dari aplikasi Aplikasi Keuangan.
             </td>
             <td class="sign-right">
-                <div class="tgl">Malang, {{ $tanggalCetak }}</div>
+                <div class="tgl">Surabaya, {{ $tanggalCetak }}</div>
                 <div class="jabatan">Kepala Keuangan</div>
-                <div class="instansi">YPI AR-ROHMAH PUTRI</div>
-                @if(!empty($ttdSrc))
-                    <img class="ttd-img" src="{{ $ttdSrc }}" alt="Tanda tangan">
-                @else
-                    <div class="sign-space"></div>
-                @endif
-                <div class="nama-ttd">Ashim Rosyadi, S.Pdi.</div>
+                <div class="instansi">YAYASAN PERGURUAN AL-IRSYAD</div>
+                <div class="instansi" style="font-size: 8px; font-weight: normal; margin-top: 2px;">Kota Surabaya, Prov. Jawa Timur</div>
+                <div class="sign-space"></div>
             </td>
         </tr>
     </table>

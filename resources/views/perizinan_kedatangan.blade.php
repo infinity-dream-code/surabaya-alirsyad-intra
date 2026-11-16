@@ -327,7 +327,7 @@
                 </div>
 
                 <button type="button" class="btn-submit">
-                    <span class="arrow">➤</span>
+                    <span class="arrow">?</span>
                     KIRIM PERIZINAN
                 </button>
             </div>
@@ -338,7 +338,7 @@
     <aside class="drawer" id="drawer">
         <div class="drawer-header">
             <div class="drawer-logo">
-                <img src="{{ asset('logo.png') }}" alt="Logo">
+                <img src="{{ asset('alirsyad.jpg') }}" alt="Logo">
             </div>
             <div>
                 <div class="drawer-user-name">{{ session('user.username', 'farrelep') }}</div>
@@ -530,7 +530,7 @@
 
             // Disable button saat submit
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span class="arrow">⏳</span> MENGIRIM...';
+            submitBtn.innerHTML = '<span class="arrow">?</span> MENGIRIM...';
 
             // Kirim request ke API
             fetch(`{{ route('perizinan.kedatangan.submit') }}`, {

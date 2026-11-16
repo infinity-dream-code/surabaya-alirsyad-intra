@@ -265,7 +265,7 @@
             <button class="burger" id="drawerToggle" type="button" aria-label="Buka/tutup menu" title="Menu"><span></span><span></span><span></span></button>
             <div class="title-wrap">
                 <h1 class="title">Laporan Cashless</h1>
-                <p class="subtitle">Monitoring transaksi per teller â€” data hanya milik akun Anda</p>
+                <p class="subtitle">Monitoring transaksi per teller — data hanya milik akun Anda</p>
             </div>
         </header>
 
@@ -422,7 +422,7 @@
 <aside class="drawer" id="drawer" aria-hidden="true">
     <div class="drawer-header">
         <div class="drawer-header-main">
-            <div class="drawer-logo"><img src="{{ asset('logo.png') }}" alt="Logo"></div>
+            <div class="drawer-logo"><img src="{{ asset('alirsyad.jpg') }}" alt="Logo"></div>
             <div>
                 <div class="drawer-user-name">{{ session('user.nama', session('user.username')) }}</div>
                 <div class="drawer-user-role">
@@ -688,7 +688,7 @@ async function toggleDetail(btn, row, item) {
             return;
         }
         detailTr.innerHTML = `<td colspan="12"><div class="detail-box">
-            <div class="detail-head"><span><i class="fas fa-list"></i> Detail Transaksi</span><span>${escapeHtml(item.transno || '-')} Â· ${rows.length} baris</span></div>
+            <div class="detail-head"><span><i class="fas fa-list"></i> Detail Transaksi</span><span>${escapeHtml(item.transno || '-')} · ${rows.length} baris</span></div>
             <table>
             <thead><tr>
                 <th>Tanggal</th><th>Metode</th><th>Noreff</th><th>Debet</th><th>Kredit</th><th>Channel</th><th>Reff Bank</th><th>Keterangan</th>
@@ -755,7 +755,7 @@ async function loadData(resetPage = false) {
             body.querySelectorAll('.btn-expand').forEach((btn, i) => {
                 btn.addEventListener('click', () => toggleDetail(btn, btn.closest('tr'), rows[i]));
             });
-            document.getElementById('pageInfo').textContent = `Menampilkan ${pag.from || 0}â€“${pag.to || 0}`;
+            document.getElementById('pageInfo').textContent = `Menampilkan ${pag.from || 0}–${pag.to || 0}`;
         }
         document.getElementById('btnPrev').disabled = currentPage <= 1;
         document.getElementById('btnNext').disabled = !hasMore;

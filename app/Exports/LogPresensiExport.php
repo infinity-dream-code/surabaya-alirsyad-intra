@@ -62,7 +62,7 @@ class LogPresensiExport implements FromArray, WithDrawings, WithEvents
 
     public function drawings(): array
     {
-        $logoPath = public_path('logo.png');
+        $logoPath = public_path('alirsyad.jpg');
         if (! file_exists($logoPath)) {
             return [];
         }

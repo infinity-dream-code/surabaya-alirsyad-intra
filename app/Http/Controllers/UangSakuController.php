@@ -182,8 +182,8 @@ class UangSakuController extends Controller
             'saldoSekarang' => (float) ($data['saldo_sekarang'] ?? 0),
             'generatedAt' => now('Asia/Jakarta')->format('d/m/Y H:i'),
             'admin' => (string) session('user.nama', session('user.username', '')),
-            'logoSrc' => $this->resolvePdfImageSrc('logoartri.png'),
-            'ttdSrc' => $this->resolvePdfImageSrc('ttd.png'),
+            'logoSrc' => $this->resolvePdfImageSrc('alirsyad.jpg'),
+            'ttdSrc' => null,
         ])->setPaper('a4', 'portrait');
 
         $safeName = preg_replace('/[^A-Za-z0-9_\-]+/', '_', (string) ($siswa['nama'] ?? $custid));

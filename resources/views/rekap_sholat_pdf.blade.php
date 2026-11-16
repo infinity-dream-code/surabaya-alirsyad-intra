@@ -90,7 +90,7 @@
 
 <div class="header">
     <div class="logo">
-        <img src="{{ public_path('logo.png') }}" alt="Logo">
+        <img src="{{ public_path('alirsyad.jpg') }}" alt="Logo">
     </div>
     <div class="title-block">
         <h1>Rekap Sholat Siswa</h1>

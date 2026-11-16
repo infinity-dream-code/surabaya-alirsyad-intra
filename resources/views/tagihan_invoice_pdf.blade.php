@@ -58,11 +58,11 @@
     <tr>
         <td class="logo-cell">
             @if(!empty($logoSrc))
-                <img src="{{ $logoSrc }}" alt="Logo ARTRI">
+                <img src="{{ $logoSrc }}" alt="Logo Al-Irsyad">
             @endif
         </td>
         <td class="title-cell">
-            <div class="pdf-org">YPI AR-ROHMAH PUTRI</div>
+            <div class="pdf-org">YAYASAN PERGURUAN AL-IRSYAD</div>
             <div class="pdf-title">INVOICE PEMBAYARAN</div>
             <div class="pdf-meta">
                 dicetak {{ $generatedAt }}@if(!empty($admin)) · oleh {{ $admin }}@endif
@@ -133,6 +133,6 @@
     </tfoot>
 </table>
 
-<div class="foot">Bukti pembayaran tagihan yang sudah lunas · Monitoring Keuangan Santri</div>
+<div class="foot">Bukti pembayaran tagihan yang sudah lunas · Aplikasi Keuangan</div>
 </body>
 </html>

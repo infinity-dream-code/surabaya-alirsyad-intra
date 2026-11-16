@@ -60,7 +60,7 @@
         <tr>
             <td class="logo-cell">@if(!empty($logoSrc))<img src="{{ $logoSrc }}" alt="Logo">@endif</td>
             <td class="title-cell">
-                <div class="pdf-org">YPI AR-ROHMAH PUTRI</div>
+                <div class="pdf-org">YAYASAN PERGURUAN AL-IRSYAD</div>
                 <div class="pdf-title">LAPORAN UANG SAKU SANTRI</div>
                 <div class="pdf-meta">Periode {{ $periodeLabel }} · dicetak {{ $generatedAt }}</div>
             </td>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Login Internal Affairs</title>
+    <title>Login - Yayasan Perguruan Al-Irsyad</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -215,14 +215,14 @@
     <div class="page-wrapper">
         <div class="card">
             <div class="logo-wrapper">
-                <img src="{{ asset('logo.png') }}" alt="Logo Yayasan">
+                <img src="{{ asset('alirsyad.jpg') }}" alt="Logo Yayasan">
             </div>
 
             <div class="welcome-text">
                 <h1>
-                    <span>Selamat Datang.</span>
+                    <span>Yayasan Perguruan Al-Irsyad</span>
                 </h1>
-                <p>Silahkan Masukan Username dan Password untuk masuk ke App Internal Affairs</p>
+                <p>Silahkan masukkan username dan password untuk masuk ke aplikasi</p>
             </div>
 
             <form method="POST" action="{{ route('login') }}">
@@ -232,17 +232,8 @@
                     <div class="input-wrap">
                         <span class="icon"><i class="fas fa-layer-group"></i></span>
                         <select id="app" name="app" required>
-                            <option value="super-artri" {{ old('app', 'super-artri') === 'super-artri' ? 'selected' : '' }}>
-                                Aplikasi SuPer Artri
-                            </option>
-                            <option value="presensi-sholat" {{ old('app') === 'presensi-sholat' ? 'selected' : '' }}>
-                                Aplikasi Presensi Sholat
-                            </option>
-                            <option value="monitoring-kepsek" {{ old('app') === 'monitoring-kepsek' ? 'selected' : '' }}>
-                                Aplikasi Monitoring Keuangan Santri
-                            </option>
-                            <option value="laporan-cashless" {{ old('app') === 'laporan-cashless' ? 'selected' : '' }}>
-                                Aplikasi Laporan Cashless
+                            <option value="monitoring-kepsek" selected>
+                                Aplikasi Keuangan
                             </option>
                         </select>
                     </div>

@@ -93,7 +93,7 @@
     <div class="drawer-backdrop" id="drawerBackdrop"></div>
     <aside class="drawer" id="drawer">
         <div class="drawer-header">
-            <div class="drawer-logo"><img src="{{ asset('logo.png') }}" alt="Logo"></div>
+            <div class="drawer-logo"><img src="{{ asset('alirsyad.jpg') }}" alt="Logo"></div>
             <div>
                 <div class="drawer-user-name">{{ session('user.username', '-') }}</div>
                 <div class="drawer-user-role">User</div>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ session('user.humas') == 1 ? 'Tagihan Daftar Ulang' : 'Tagihan' }} - Monitoring Kepsek</title>
+    <title>{{ session('user.humas') == 1 ? 'Tagihan Daftar Ulang' : 'Tagihan' }} - Aplikasi Keuangan</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -328,7 +328,7 @@
 <aside class="drawer" id="drawer" aria-hidden="true">
     <div class="drawer-header">
         <div class="drawer-header-main">
-            <div class="drawer-logo"><img src="{{ asset('logo.png') }}" alt="Logo"></div>
+            <div class="drawer-logo"><img src="{{ asset('alirsyad.jpg') }}" alt="Logo"></div>
             <div>
                 <div class="drawer-user-name">{{ session('user.nama', session('user.username')) }}</div>
                 <div class="drawer-user-role">
@@ -540,7 +540,7 @@
             const paid = Number(b.status_bayar) === 1;
             const tglBayar = paid && b.tanggal_bayar
                 ? escapeHtml(b.tanggal_bayar)
-                : '<span style="color:#94a3b8;">â€”</span>';
+                : '<span style="color:#94a3b8;">—</span>';
             return `
                 <tr class="bill-row" data-custid="${escapeHtml(custid)}" data-kode="${escapeHtml(b.kode_tagihan)}">
                     <td>${escapeHtml(b.bta || '-')}</td>
@@ -652,7 +652,7 @@
         const headHtml = `
             <div class="siswa-panel-head">
                 <div class="siswa-panel-title-row">
-                    <div class="t">Detail Keuangan â€” ${escapeHtml(siswa.nama)}</div>
+                    <div class="t">Detail Keuangan — ${escapeHtml(siswa.nama)}</div>
                 </div>
                 <div class="mini-total">
                     <div class="info-box">
@@ -1016,7 +1016,7 @@
 
             const pagination = json.pagination;
             hasMore = !!pagination.has_more;
-            document.getElementById('paginationInfo').textContent = `Menampilkan ${pagination.from}â€“${pagination.to}`;
+            document.getElementById('paginationInfo').textContent = `Menampilkan ${pagination.from}–${pagination.to}`;
             document.getElementById('btnPageNum').textContent = pagination.page;
             document.getElementById('btnPrev').disabled = pagination.page <= 1;
             document.getElementById('btnNext').disabled = !hasMore;

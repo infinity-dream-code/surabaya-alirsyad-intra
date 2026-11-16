@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ ($restrictedTagihan ?? false) ? 'Tagihan Daftar Ulang' : 'Tagihan Periode' }} - Monitoring Kepsek</title>
+    <title>{{ ($restrictedTagihan ?? false) ? 'Tagihan Daftar Ulang' : 'Tagihan Periode' }} - Aplikasi Keuangan</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -459,7 +459,7 @@
             .table-toolbar .btn-row { justify-content: stretch; }
             .table-toolbar .btn { flex: 1; justify-content: center; }
         }
-        /* Card list: HP + tablet portrait â€” harus SETELAH rule .mobile-list { display:none } */
+        /* Card list: HP + tablet portrait — harus SETELAH rule .mobile-list { display:none } */
         .mobile-list {
             display: none;
             flex-direction: column;
@@ -521,7 +521,7 @@
         }
         @media (min-width: 901px) and (max-width: 1280px) {
             .table-scroll::after {
-                content: "Geser ke samping untuk melihat semua kolom â†’";
+                content: "Geser ke samping untuk melihat semua kolom ?";
                 display: block;
                 padding: 8px 14px 12px;
                 font-size: .72rem;
@@ -847,7 +847,7 @@
 <aside class="drawer" id="drawer" aria-hidden="true">
     <div class="drawer-header">
         <div class="drawer-header-main">
-            <div class="drawer-logo"><img src="{{ asset('logo.png') }}" alt="Logo"></div>
+            <div class="drawer-logo"><img src="{{ asset('alirsyad.jpg') }}" alt="Logo"></div>
             <div>
                 <div class="drawer-user-name">{{ session('user.nama', session('user.username')) }}</div>
                 <div class="drawer-user-role">
@@ -1015,22 +1015,15 @@ function formatAngka(val) {
     return new Intl.NumberFormat('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(n);
 }
 
-/** Prefix BCN VA berdasarkan CODE01 siswa (mst_sekolah) */
-const VA_PREFIX_BY_CODE01 = {
-    '101': '751027', // ARROHMAH Putri 1 / artri 1
-    '102': '751028', // ARROHMAH Putra Tahfidz
-    '103': '751022', // ARROHMAH Putri 2 / artri 2
-    '104': '751031', // SD TK PG Artri
-};
+/** Prefix BCN VA Yayasan Perguruan Al-Irsyad Surabaya */
+const VA_PREFIX = '751079';
 
 function buildVirtualAccount(siswa) {
     const nocust = String(siswa.nis || siswa.nocust || '').replace(/\D/g, '');
     if (!nocust) return '-';
-    const code01 = String(siswa.code01 || '').trim();
-    const prefix = VA_PREFIX_BY_CODE01[code01] || '';
     // Hindari dobel prefix jika NOCUST sudah diawali kode BCN
-    if (prefix && nocust.startsWith(prefix)) return nocust;
-    return prefix ? (prefix + nocust) : nocust;
+    if (nocust.startsWith(VA_PREFIX)) return nocust;
+    return VA_PREFIX + nocust;
 }
 
 function buildWaMessage(siswa) {
@@ -1073,7 +1066,8 @@ function buildWaMessage(siswa) {
         '',
         'Jazakumullahu khairan katsiran. Barakallahu fiikum.',
         '',
-        'Bagian Keuangan YPI Ar-Rohmah Putri Malang',
+        'Bagian Keuangan Yayasan Perguruan Al-Irsyad',
+        'Kota Surabaya, Prov. Jawa Timur',
         '',
         'Apabila pembayaran telah dilakukan, mohon pesan ini dapat diabaikan.',
         '',
@@ -1085,8 +1079,8 @@ function openKirimTagihanWa(siswa) {
     const wa = normalizeWaNumber(siswa.no_wa);
     if (!wa) return;
     const text = encodeURIComponent(buildWaMessage(siswa));
-    // Bug WA: wa.me / kadang api.whatsapp merusak emoji jadi ï¿½ di desktop.
-    // Mobile â†’ api.whatsapp.com ; Desktop â†’ web.whatsapp.com
+    // Bug WA: wa.me / kadang api.whatsapp merusak emoji jadi ? di desktop.
+    // Mobile ? api.whatsapp.com ; Desktop ? web.whatsapp.com
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent || '');
     const url = isMobile
         ? ('https://api.whatsapp.com/send?phone=' + wa + '&text=' + text)
@@ -1103,7 +1097,11 @@ function buildLaporanWaMessage(link, nama) {
         '',
         'Bapak/Ibu Wali Santri yang kami hormati, berikut kami sampaikan laporan keuangan ananda *(' + namaSantri + ')* untuk dapat diperiksa dan menjadi perhatian bersama.',
         link,
+        '',
         'Terima kasih atas perhatian dan kerja sama Bapak/Ibu.',
+        '',
+        'Bagian Keuangan Yayasan Perguruan Al-Irsyad',
+        'Kota Surabaya, Prov. Jawa Timur',
     ].join('\n');
 }
 
@@ -1198,7 +1196,7 @@ async function openLaporanPenagihanModal(siswa) {
         siswa.kelas ? `Kelas ${siswa.kelas}` : '',
         custid ? `CUSTID ${custid}` : '',
         bta ? `BTA ${bta}` : '',
-    ].filter(Boolean).join(' Â· ') || '-';
+    ].filter(Boolean).join(' · ') || '-';
 
     const body = document.getElementById('laporanBody');
     body.innerHTML = '<div class="mini-loading"><div class="spinner"></div>Memuat riwayat...</div>';
@@ -1326,7 +1324,7 @@ function renderActionButtons(siswa, paid) {
 function renderActionCells(siswa, paid) {
     if (paid) {
         return `
-            <td class="col-wa"><span class="aksi-empty">â€”</span></td>
+            <td class="col-wa"><span class="aksi-empty">—</span></td>
             <td class="col-penagihan">${renderActionButtons(siswa, paid)}</td>
         `;
     }
@@ -1376,7 +1374,7 @@ function renderMobileCard(row, no) {
                 <div>
                     <div class="m-card-no">#${no}</div>
                     <div class="m-card-name">${escapeHtml((row.nama || '').toUpperCase())}</div>
-                    <div class="m-card-meta">${escapeHtml(row.kelas || '-')} Â· ${escapeHtml(row.sekolah || '-')}</div>
+                    <div class="m-card-meta">${escapeHtml(row.kelas || '-')} · ${escapeHtml(row.sekolah || '-')}</div>
                 </div>
             </div>
             <div class="m-card-badges">
@@ -1572,7 +1570,7 @@ function renderBillsTable(custid, bills) {
         const paid = Number(b.status_bayar) === 1;
         const tglBayar = paid && b.tanggal_bayar
             ? escapeHtml(b.tanggal_bayar)
-            : '<span style="color:#94a3b8;">â€”</span>';
+            : '<span style="color:#94a3b8;">—</span>';
         const namaTagihan = escapeHtml(b.nama_tagihan);
         const namaCell = paid
             ? `<a class="invoice-link" href="${escapeHtml(buildInvoiceUrl(custid, b.kode_tagihan))}" target="_blank" rel="noopener" title="Download invoice"><i class="fas fa-file-pdf"></i>${namaTagihan}</a>`
@@ -1826,7 +1824,7 @@ async function toggleSiswaDetail(btn, dataRow, siswa) {
     const headHtml = (saldoValueHtml) => `
         <div class="siswa-panel-head">
             <div class="siswa-panel-title-row">
-                <div class="t">Detail Keuangan â€” ${escapeHtml((siswa.nama || '').toUpperCase())} ${kaderBadgeHtml(siswa)}</div>
+                <div class="t">Detail Keuangan — ${escapeHtml((siswa.nama || '').toUpperCase())} ${kaderBadgeHtml(siswa)}</div>
                 <div class="siswa-panel-actions">
                     ${periodeBadgeHtml}
                     ${laporanBtnHtml}
@@ -2441,7 +2439,7 @@ async function loadSiswaList(resetPage = false) {
 
         const pagination = json.pagination;
         hasMore = !!pagination.has_more;
-        document.getElementById('paginationInfo').textContent = `Menampilkan ${pagination.from}â€“${pagination.to}`;
+        document.getElementById('paginationInfo').textContent = `Menampilkan ${pagination.from}–${pagination.to}`;
         document.getElementById('btnPageNum').textContent = pagination.page;
         document.getElementById('btnPrev').disabled = pagination.page <= 1;
         document.getElementById('btnNext').disabled = !hasMore;
