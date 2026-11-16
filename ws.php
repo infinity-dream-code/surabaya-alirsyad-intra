@@ -99,28 +99,25 @@ function login(array $req): void
 
     $pdo = dbConnectPdo();
 
-    $stmt = $pdo->prepare("SELECT * FROM kepsek_user WHERE username = :username LIMIT 1");
+    $stmt = $pdo->prepare("SELECT * FROM cyber_key WHERE users = :username LIMIT 1");
     $stmt->bindValue(":username", $username, PDO::PARAM_STR);
     $stmt->execute();
     $user = $stmt->fetch();
 
-    if (!$user) {
+    if (!$user || !is_array($user)) {
         http_response_code(401);
         echo json_encode(["status" => 401, "message" => "Username atau password salah"], JSON_UNESCAPED_UNICODE);
         exit;
     }
 
     $passwordHash = (string) ($user["password"] ?? "");
+    $kunci = (string) ($user["kunci"] ?? "");
     $valid = false;
 
-    if (strlen($passwordHash) === 32 && ctype_xdigit($passwordHash)) {
-        $valid = md5($password) === $passwordHash;
-    } elseif (strlen($passwordHash) === 64 && ctype_xdigit($passwordHash)) {
-        $valid = hash("sha256", $password) === $passwordHash;
-    } elseif (str_starts_with($passwordHash, "$2")) {
-        $valid = password_verify($password, $passwordHash);
-    } else {
-        $valid = $password === $passwordHash;
+    if ($passwordHash !== "" && verifyCashlessPassword($password, $passwordHash)) {
+        $valid = true;
+    } elseif ($kunci !== "" && verifyCashlessPassword($password, $kunci)) {
+        $valid = true;
     }
 
     if (!$valid) {
@@ -136,23 +133,39 @@ function login(array $req): void
         exit;
     }
 
-    $code01Raw = isset($user["CODE01"]) ? trim((string) $user["CODE01"]) : "";
-    $code01 = $code01Raw !== "" ? $code01Raw : null;
+    $uname = trim((string) ($user["users"] ?? $username));
+    $nama = trim((string) ($user["ket"] ?? ""));
+    if ($nama === "") {
+        $nama = $uname;
+    }
 
-    // kelompok: "humas" / 1 = humas (lock daftar ulang)
-    //           "superadmin" / "kepsek" = akses penuh (kepsek tanpa Laporan Uang Saku)
-    //           0 / kosong = admin biasa (filter mengikuti CODE01)
-    $kelompokRaw = trim((string) ($user["kelompok"] ?? ""));
+    // cyber_key.kel → kelompok aplikasi keuangan
+    // admfak / supersaku = akses penuh (superadmin)
+    // humas = lock daftar ulang
+    $kelRaw = trim((string) ($user["kel"] ?? ""));
+    $kelNorm = strtolower($kelRaw);
+    $kelompokRaw = $kelRaw;
+    if (in_array($kelNorm, ["admfak", "supersaku", "superadmin", "kepsek"], true)) {
+        $kelompokRaw = "superadmin";
+    }
     $kelompokNorm = strtolower($kelompokRaw);
     $humas = ($kelompokNorm === "humas" || $kelompokNorm === "1") ? 1 : 0;
 
+    // cyber_key tidak punya CODE01; fid dipakai jika terisi, selain itu null = semua unit
+    $code01Raw = trim((string) ($user["fid"] ?? ""));
+    $code01 = $code01Raw !== "" ? $code01Raw : null;
+
+    $userId = $user["urut"] ?? $uname;
+
     $payload = [
-        "user_id"  => $user["idincrement"],
-        "username" => $user["username"],
-        "nama"     => $user["nama"],
+        "user_id"  => $userId,
+        "username" => $uname,
+        "nama"     => $nama,
         "code01"   => $code01,
         "kelompok" => $kelompokRaw,
+        "kel"      => $kelRaw,
         "humas"    => $humas,
+        "source"   => "cyber_key",
         "iat"      => time(),
         "exp"      => time() + 86400,
     ];
@@ -166,10 +179,11 @@ function login(array $req): void
         "message" => "Login berhasil",
         "data"    => [
             "token"    => $token,
-            "nama"     => $user["nama"],
-            "username" => $user["username"],
+            "nama"     => $nama,
+            "username" => $uname,
             "code01"   => $code01,
             "kelompok" => $kelompokRaw,
+            "kel"      => $kelRaw,
             "humas"    => $humas,
         ]
     ], JSON_UNESCAPED_UNICODE);

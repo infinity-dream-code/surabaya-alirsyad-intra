@@ -2450,7 +2450,12 @@ async function loadSiswaList(resetPage = false) {
         empty.style.display = 'block';
         tbody.innerHTML = '';
         mobileList.innerHTML = '';
-        Swal.fire({ icon: 'error', title: 'Error', text: 'Tidak dapat terhubung ke server', confirmButtonColor: '#2563eb' });
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: (e && e.message) ? e.message : 'Tidak dapat terhubung ke server',
+            confirmButtonColor: '#2563eb'
+        });
     }
 }
 

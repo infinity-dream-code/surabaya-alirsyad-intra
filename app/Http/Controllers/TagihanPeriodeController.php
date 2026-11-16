@@ -231,28 +231,34 @@ class TagihanPeriodeController extends Controller
         $tokenHash = (string) session('user.token');
         $cacheKey = 'periode_siswa_agg_v2_' . md5(json_encode($filterParams) . '|' . $page . '|' . $limit . '|' . $tokenHash);
 
-        $result = Cache::remember($cacheKey, 300, function () use ($filterParams, $limit, $offset) {
-            $r = $this->callWs('getSiswaPeriode', array_merge($filterParams, [
+        $result = Cache::get($cacheKey);
+        if (!is_array($result) || ($result['status'] ?? 0) !== 200) {
+            $result = $this->callWs('getSiswaPeriode', array_merge($filterParams, [
                 'limit' => $limit,
                 'offset' => $offset
-            ]), 55);
-            return ($r['status'] ?? 0) === 200 ? $r : null;
-        });
+            ]), 90);
+            if (($result['status'] ?? 0) === 200) {
+                Cache::put($cacheKey, $result, 300);
+            }
+        }
 
-        if ($result === null) {
+        if (($result['status'] ?? 0) !== 200) {
             return response()->json([
                 'success' => false,
-                'message' => 'Gagal mengambil data siswa'
+                'message' => $result['message'] ?? 'Gagal mengambil data siswa',
             ], 422);
         }
 
         $data = $result['data'] ?? [];
 
         $countCacheKey = 'periode_siswa_count_' . md5(json_encode($filterParams) . '|' . $tokenHash);
-        $countResult = Cache::remember($countCacheKey, 300, function () use ($filterParams) {
-            $r = $this->callWs('getSiswaCount', $filterParams, 10);
-            return ($r['status'] ?? 0) === 200 ? $r : null;
-        });
+        $countResult = Cache::get($countCacheKey);
+        if (!is_array($countResult) || ($countResult['status'] ?? 0) !== 200) {
+            $countResult = $this->callWs('getSiswaCount', $filterParams, 30);
+            if (($countResult['status'] ?? 0) === 200) {
+                Cache::put($countCacheKey, $countResult, 300);
+            }
+        }
 
         $totalCount = $countResult['data']['total'] ?? count($data);
 
@@ -378,19 +384,20 @@ class TagihanPeriodeController extends Controller
 
         $cacheKey = 'periode_summary_v2_' . md5(json_encode($filterParams) . '|' . (string) session('user.token'));
 
-        $result = Cache::remember($cacheKey, 300, function () use ($filterParams) {
-            $r = $this->callWs('getSummaryTagihanPeriode', $filterParams, 55);
-            if (($r['status'] ?? 0) !== 200) {
-                Log::warning('Tagihan summary ws gagal', ['params' => $filterParams, 'response' => $r]);
-                return null;
+        $result = Cache::get($cacheKey);
+        if (!is_array($result) || ($result['status'] ?? 0) !== 200) {
+            $result = $this->callWs('getSummaryTagihanPeriode', $filterParams, 90);
+            if (($result['status'] ?? 0) === 200) {
+                Cache::put($cacheKey, $result, 300);
+            } else {
+                Log::warning('Tagihan summary ws gagal', ['params' => $filterParams, 'response' => $result]);
             }
-            return $r;
-        });
+        }
 
-        if ($result === null) {
+        if (($result['status'] ?? 0) !== 200) {
             return response()->json([
                 'success' => false,
-                'message' => 'Gagal mengambil ringkasan tagihan',
+                'message' => $result['message'] ?? 'Gagal mengambil ringkasan tagihan',
             ], 422);
         }
 
@@ -1078,10 +1085,14 @@ class TagihanPeriodeController extends Controller
         } catch (\Throwable $e) {
             Log::error('Monitoring Kepsek WS error', [
                 'method'  => $method,
+                'url'     => self::API_URL,
                 'message' => $e->getMessage(),
             ]);
 
-            return ['status' => 500, 'message' => 'Tidak dapat terhubung ke server'];
+            return [
+                'status'  => 500,
+                'message' => 'Tidak dapat terhubung ke WS (' . $method . '): ' . $e->getMessage(),
+            ];
         }
     }
 }
